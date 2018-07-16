@@ -1,0 +1,278 @@
+jt@jt-VirtualBox:~/cmpt433/public/myApps$ gdb-multiarch -q noworky 
+Reading symbols from noworky...done.
+(gdb) target remote 192.168.7.2:2001
+Remote debugging using 192.168.7.2:2001
+warning: Unable to find dynamic linker breakpoint function.
+GDB will be unable to debug shared library initializers
+and track explicitly loaded dynamic code.
+0xb6fd7bc0 in ?? ()
+(gdb) list
+37	{
+38		unsigned int i;
+39	    for (i=0; i < size; i++) {
+40			printf("%3d: %05.1f --> %05.1f\n", i, source[i], target[i]);
+41		}
+42	}
+43	
+44	/*
+45	 * Create two arrays; populate them; swap them; display them.
+46	 */
+(gdb) list
+47	int main()
+48	{
+49		unsigned int i;
+50		double *source, *target;
+51		printf("noworky: by Brian Fraser\n");
+52	
+53		// Allocate the arrays:
+54		source = malloc(sizeof(*source) * NUM_ELEMENTS);
+55		target = malloc(sizeof(*target) * NUM_ELEMENTS);
+56	
+(gdb) list
+57		if (!source || !target) {
+58			printf("ERROR: Allocation failed.\n");
+59		}
+60	
+61		// Initialize the arrays
+62		for (i=0; i < NUM_ELEMENTS; i++) {
+63			source[i] = i * 2.0;
+64			target[i] = i * 10.0;
+65		}
+66	
+(gdb) list
+67		// Display them
+68		printf("Initial values: \n");
+69		displayArrays(source, target, NUM_ELEMENTS);
+70	
+71		// Swap their contents
+72		tradeArrays(source, target, NUM_ELEMENTS);
+73	
+74		// Display them
+75		printf("Final values: \n");
+76		displayArrays(source, target, NUM_ELEMENTS);
+(gdb) list
+77	
+78		// Clean up.
+79		free(source);
+80		free(target);
+81	
+82		printf("Done.\n");
+83	
+84		return 0;
+85	}
+(gdb) break 72
+Breakpoint 1 at 0x866a: file noworky.c, line 72.
+(gdb) list
+Line number 86 out of range; noworky.c has 85 lines.
+(gdb) break main
+Breakpoint 2 at 0x85d2: file noworky.c, line 51.
+(gdb) continue
+Continuing.
+warning: Could not load shared library symbols for 3 libraries, e.g. /lib/arm-linux-gnueabihf/libpthread.so.0.
+Use the "info sharedlibrary" command to see the complete listing.
+Do you need "set solib-search-path" or "set sysroot"?
+
+Breakpoint 2, main () at noworky.c:51
+51		printf("noworky: by Brian Fraser\n");
+(gdb) list
+46	 */
+47	int main()
+48	{
+49		unsigned int i;
+50		double *source, *target;
+51		printf("noworky: by Brian Fraser\n");
+52	
+53		// Allocate the arrays:
+54		source = malloc(sizeof(*source) * NUM_ELEMENTS);
+55		target = malloc(sizeof(*target) * NUM_ELEMENTS);
+(gdb) list
+56	
+57		if (!source || !target) {
+58			printf("ERROR: Allocation failed.\n");
+59		}
+60	
+61		// Initialize the arrays
+62		for (i=0; i < NUM_ELEMENTS; i++) {
+63			source[i] = i * 2.0;
+64			target[i] = i * 10.0;
+65		}
+(gdb) continue
+Continuing.
+
+Breakpoint 1, main () at noworky.c:72
+72		tradeArrays(source, target, NUM_ELEMENTS);
+(gdb) down
+Bottom (innermost) frame selected; you cannot go down.
+(gdb) frame
+#0  main () at noworky.c:72
+72		tradeArrays(source, target, NUM_ELEMENTS);
+(gdb) step
+tradeArrays (array1=0x12008, array2=0x12060, size=10) at noworky.c:28
+28		for (i = size-1; i >= 0; i--) {
+(gdb) step
+29			swapContent(array1+i, array2+i);
+(gdb) break 29
+Breakpoint 3 at 0x855a: file noworky.c, line 29.
+(gdb) info args
+array1 = 0x12008
+array2 = 0x12060
+size = 10
+(gdb) info local
+i = 9
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) info local
+i = 8
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) info local
+i = 7
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) info local
+i = 1
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) info local
+i = 0
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) info local
+i = 4294967295
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) info local
+i = 4294967294
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) info local
+i = 4294967293
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) delete 29
+No breakpoint number 29.
+(gdb) continue
+Continuing.
+
+Breakpoint 3, tradeArrays (array1=0x12008, array2=0x12060, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) info breakpoints
+Num     Type           Disp Enb Address    What
+1       breakpoint     keep y   0x0000866a in main at noworky.c:72
+	breakpoint already hit 1 time
+2       breakpoint     keep y   0x000085d2 in main at noworky.c:51
+	breakpoint already hit 1 time
+3       breakpoint     keep y   0x0000855a in tradeArrays at noworky.c:29
+	breakpoint already hit 20 times
+(gdb) delete 3
+(gdb) continue
+Continuing.
+
+Program received signal SIGSEGV, Segmentation fault.
+0x0000853a in swapContent (d1=0x10ff8, d2=0x11050) at noworky.c:19
+19		*d1 = tmp;
+(gdb) quit
+A debugging session is active.
+
+	Inferior 1 [process 1047] will be killed.
+
+Quit anyway? (y or n) y

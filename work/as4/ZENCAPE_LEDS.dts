@@ -1,0 +1,84 @@
+/*
+* Configure the three signals for the tri-colour LED on the Zen cape to be an LED in Linux
+* Based on: https://github.com/nomel/beaglebone/blob/master/led-header/generated/led-P9.12-00A0.dts
+* Written by Brian Fraser; released under GPL and BSD.
+* 
+* Updated Nov 2016 for Kernel 4.4
+* 
+* Compile with:
+*    dtc -O dtb -o ZENCAPE_LEDS-00A0.dtbo -b 0 -@ ZENCAPE_LEDS.dts
+* Copy the .dtbo to /lib/firmware
+* Load with:
+*    echo ZENCAPE_LEDS > /sys/devices/platform/bone_capemgr/slots
+* Use like any Linux LEDs via /sys/class/leds/zencape:red/....
+*/
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "ti,beaglebone", "ti,beaglebone-black";
+
+	/* identification */
+	part-number = "ZENCAPE_LEDS";
+	/* version = "00A0"; */
+
+	/* state the resources this cape uses */
+	exclusive-use =
+		/* the pin header uses */
+		"P9.12",        /* Red */
+		"P9.13",        /* Green */
+		"P9.11",        /* Blue */
+
+		/* the hardware IP uses */
+		"gpio1_28", 
+		"gpio0_31",
+		"gpio0_30";
+	
+	
+	/* rxDisable_pullNone state */
+	fragment@0 {
+		target = <&am33xx_pinmux>;
+		__overlay__ {
+			configure_pins_rxDisable_pullNone: pinmux_gpio_rxDisable_pullNone {
+				pinctrl-single,pins = <
+					0x78 0xf /* P9.12 Output Mode 7, no pull */
+					0x74 0xf /* P9.13 Output Mode 7, no pull */
+					0x70 0xf
+				>;
+			};
+		};
+	};
+
+	fragment@1 {
+		target = <&ocp>;
+		__overlay__ {
+			zencape_led_helper {
+				compatible = "gpio-leds";
+				pinctrl-names = "default";
+				pinctrl-0 = <&configure_pins_rxDisable_pullNone>;
+				
+				zencape-red {
+					label = "zencape:red";
+					gpios = <&gpio1 28 0>;
+					linux,default-trigger = "none";
+					default-state = "off";
+				};
+				zencape-green {
+					label = "zencape:green";
+					gpios = <&gpio0 31 0>;
+					linux,default-trigger = "none";
+					default-state = "off";
+				};
+				zencape-blue {
+					label = "zencape:blue";
+					gpios = <&gpio0 30 0>;
+					linux,default-trigger = "none";
+					default-state = "off";
+				};
+			};
+			
+		};
+	};
+
+};

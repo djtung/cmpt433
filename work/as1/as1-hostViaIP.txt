@@ -1,0 +1,50 @@
+jt@jt-VirtualBox:~/Documents/433$ ssh root@192.168.7.2
+Debian GNU/Linux 8
+
+BeagleBoard.org Debian Image 2016-05-13
+
+Support/FAQ: http://elinux.org/Beagleboard:BeagleBoneBlack_Debian
+
+default username:password is [debian:temppwd]
+
+Last login: Wed May 23 04:11:45 2018
+root@beaglebone:~# cd /proc
+root@beaglebone:/proc# ls
+1    21   321  507  72	 8	      devices	   kpageflags	 stat
+10   22   336  509  73	 80	      diskstats    loadavg	 swaps
+11   23   342  528  74	 804	      driver	   locks	 sys
+12   24   351  54   75	 9	      execdomains  meminfo	 sysrq-trigger
+133  25   373  55   76	 96	      fb	   misc		 sysvipc
+134  26   375  56   762  apm	      filesystems  modules	 thread-self
+14   263  4    58   764  asound       fs	   mounts	 timer_list
+15   27   406  59   766  buddyinfo    interrupts   mtd		 timer_stats
+16   28   413  591  77	 bus	      iomem	   net		 tty
+17   29   424  6    774  cgroups      ioports	   pagetypeinfo  uptime
+177  299  444  60   78	 cmdline      irq	   partitions	 version
+18   3	  445  61   783  config.gz    kallsyms	   sched_debug	 vmallocinfo
+19   30   446  694  79	 consoles     key-users    schedstat	 vmstat
+193  31   447  697  794  cpu	      keys	   scsi		 zoneinfo
+197  313  450  698  795  cpuinfo      kmsg	   self
+2    319  498  7    796  crypto       kpagecgroup  slabinfo
+20   32   5    71   798  device-tree  kpagecount   softirqs
+root@beaglebone:/proc# cat version
+Linux version 4.4.9-ti-r25 (root@b3-jetson-tk1-2gb) (gcc version 4.9.2 (Debian 4.9.2-10) ) #1 SMP Thu May 5 23:08:13 UTC 2016
+root@beaglebone:/proc# cat uptime
+1686.33 1642.68
+root@beaglebone:/proc# cat cpuinfo
+processor	: 0
+model name	: ARMv7 Processor rev 2 (v7l)
+BogoMIPS	: 298.59
+Features	: half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32 
+CPU implementer	: 0x41
+CPU architecture: 7
+CPU variant	: 0x3
+CPU part	: 0xc08
+CPU revision	: 2
+
+Hardware	: Generic AM33XX (Flattened Device Tree)
+Revision	: 0000
+Serial		: 0000000000000000
+root@beaglebone:/proc# exit
+logout
+Connection to 192.168.7.2 closed.

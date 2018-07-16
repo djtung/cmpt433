@@ -1,0 +1,117 @@
+NOTES: 
+1. On step 5 for loading the Zen cape's LED virtual cape, I just did 'cat $SLOTS' to show that it was already loaded earlier.
+
+2. Removed unimportant lines from 'dmesg | tail -100'
+
+
+root@djtung-beagle:/mnt/remote/drivers# uname -r
+4.4.95-djtung-bone19
+root@djtung-beagle:/mnt/remote/drivers# cat /proc/cmdline 
+console=ttyO0,115200n8 root=/dev/mmcblk1p1 ro rootfstype=ext4 rootwait
+root@djtung-beagle:/mnt/remote/drivers# ifconfig
+eth0      Link encap:Ethernet  HWaddr 38:d2:69:4c:ce:68  
+          inet addr:192.168.2.2  Bcast:192.168.2.255  Mask:255.255.255.0
+          inet6 addr: fe80::3ad2:69ff:fe4c:ce68/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST DYNAMIC  MTU:1500  Metric:1
+          RX packets:2471 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:2239 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:325830 (318.1 KiB)  TX bytes:552012 (539.0 KiB)
+          Interrupt:172 
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:94600 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:94600 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1 
+          RX bytes:7284608 (6.9 MiB)  TX bytes:7284608 (6.9 MiB)
+
+usb0      Link encap:Ethernet  HWaddr 38:d2:69:4c:ce:60  
+          inet addr:192.168.7.2  Bcast:192.168.7.3  Mask:255.255.255.252
+          inet6 addr: fe80::3ad2:69ff:fe4c:ce60/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+root@djtung-beagle:/mnt/remote/drivers# cat $SLOTS
+ 0: PF----  -1 
+ 1: PF----  -1 
+ 2: PF----  -1 
+ 3: PF----  -1 
+ 5: P-O-L-   0 Override Board Name,00A0,Override Manuf,ZENCAPE_LEDS
+root@djtung-beagle:/mnt/remote/drivers# modinfo morsecode.ko
+filename:       /mnt/remote/drivers/morsecode.ko
+license:        GPL
+description:    Morse code driver
+author:         Jonathan Tung
+depends:        
+vermagic:       4.4.95-djtung-bone19 mod_unload modversions ARMv7 thumb2 p2v8 
+parm:           dottime:MS wait for morse code (int)
+root@djtung-beagle:/mnt/remote/drivers# insmod morsecode.ko dottime=40
+root@djtung-beagle:/mnt/remote/drivers# lsmod
+Module                  Size  Used by
+morsecode               3614  0 
+echo                    1930  0 
+8021q                  19014  0 
+garp                    6191  1 8021q
+mrp                     7495  1 8021q
+stp                     2309  1 garp
+llc                     5277  2 stp,garp
+usb_f_acm               7287  1 
+u_serial               10564  3 usb_f_acm
+usb_f_rndis            22675  1 
+g_multi                 5697  0 
+usb_f_mass_storage     41446  2 g_multi
+u_ether                11397  2 usb_f_rndis,g_multi
+libcomposite           43441  4 usb_f_acm,usb_f_rndis,g_multi,usb_f_mass_storage
+snd_soc_davinci_mcasp    16463  0 
+snd_soc_edma            1482  1 snd_soc_davinci_mcasp
+snd_soc_omap            3314  1 snd_soc_davinci_mcasp
+snd_soc_core          158010  3 snd_soc_davinci_mcasp,snd_soc_edma,snd_soc_omap
+snd_pcm_dmaengine       5401  2 snd_soc_core,snd_soc_omap
+snd_pcm                80828  4 snd_soc_davinci_mcasp,snd_soc_core,snd_soc_omap,snd_pcm_dmaengine
+evdev                  10611  1 
+snd_timer              18513  1 snd_pcm
+snd                    58952  3 snd_soc_core,snd_timer,snd_pcm
+soundcore               7285  1 snd
+uio_pdrv_genirq         3629  0 
+uio                     9190  1 uio_pdrv_genirq
+root@djtung-beagle:/mnt/remote/drivers# echo morse-code > /sys/class/leds/zencape\:red/trigger 
+root@djtung-beagle:/mnt/remote/drivers# echo 'Hello world.' > /dev/morse-code 
+root@djtung-beagle:/mnt/remote/drivers# cat /dev/morse-code 
+.... . .-.. .-.. ---    .-- --- .-. .-.. -.. 
+root@djtung-beagle:/mnt/remote/drivers# rmmod morsecode 
+root@djtung-beagle:/mnt/remote/drivers# lsmod 
+Module                  Size  Used by
+echo                    1930  0 
+8021q                  19014  0 
+garp                    6191  1 8021q
+mrp                     7495  1 8021q
+stp                     2309  1 garp
+llc                     5277  2 stp,garp
+usb_f_acm               7287  1 
+u_serial               10564  3 usb_f_acm
+usb_f_rndis            22675  1 
+g_multi                 5697  0 
+usb_f_mass_storage     41446  2 g_multi
+u_ether                11397  2 usb_f_rndis,g_multi
+libcomposite           43441  4 usb_f_acm,usb_f_rndis,g_multi,usb_f_mass_storage
+snd_soc_davinci_mcasp    16463  0 
+snd_soc_edma            1482  1 snd_soc_davinci_mcasp
+snd_soc_omap            3314  1 snd_soc_davinci_mcasp
+snd_soc_core          158010  3 snd_soc_davinci_mcasp,snd_soc_edma,snd_soc_omap
+snd_pcm_dmaengine       5401  2 snd_soc_core,snd_soc_omap
+snd_pcm                80828  4 snd_soc_davinci_mcasp,snd_soc_core,snd_soc_omap,snd_pcm_dmaengine
+evdev                  10611  1 
+snd_timer              18513  1 snd_pcm
+snd                    58952  3 snd_soc_core,snd_timer,snd_pcm
+soundcore               7285  1 snd
+uio_pdrv_genirq         3629  0 
+uio                     9190  1 uio_pdrv_genirq
+root@djtung-beagle:/mnt/remote/drivers# dmesg | tail -100
+[ 8960.443981] ----> Morse Code Driver Init. /dev/morse-code
+[ 9037.314664] <---- Morse Code Driver Exit
